@@ -1,25 +1,44 @@
 import { createStore } from 'vuex'
+import postsData from './data/posts.js'
 
-function fakeFetch(){
+function testFetch(){
     return new Promise((resolve) => setTimeout(resolve ,2000))
 }
 
 const store = createStore({
     state(){
         return {
-            count: 0
+            current: 0,
+            posts:[]
         }
     },
     
     mutations: {
         increment(state, payload){
             state.count += payload.number
+        },
+        setTestPosts(state, postsData){
+            state.posts = postsData
+        },
+        nextPost(state){
+            state.current += 1
+        },
+        previewsPost(state){
+            state.current -= 1
         }
     },
 
     actions: {  
-        async fetchPosts(){
-            fakeFetch().then(() => console.log('fetch completed'))
+        async fetchPosts(context){
+            testFetch().then(() => {
+                context.commit('setTestPosts', postsData)
+            })
+        },
+        goToNextPost(context){
+            context.commit('nextPost')
+        },
+        goToPreviewsPost(context){
+            context.commit('previewsPost')
         }
     }
 })
