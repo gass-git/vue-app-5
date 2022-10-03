@@ -16,7 +16,6 @@
         postId.value = Number(route.params.id)
         currentPost.value = posts.find((post) => post.id === postId.value)
     })
-
 </script>
 
 <template>

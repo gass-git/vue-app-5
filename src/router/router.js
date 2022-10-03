@@ -18,8 +18,7 @@ const routes = [
         children:[
             {
                 path:':id',
-                component: PostComponent,
-                
+                component: PostComponent
             }
         ]
     },
