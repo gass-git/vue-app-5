@@ -8,15 +8,12 @@ function testFetch(){
 const store = createStore({
     state(){
         return {
-            current: 0,
+            current: 1,
             posts:[]
         }
     },
     
     mutations: {
-        increment(state, payload){
-            state.count += payload.number
-        },
         setTestPosts(state, postsData){
             state.posts = postsData
         },

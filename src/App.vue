@@ -6,11 +6,12 @@
 
     const store = useStore()
     const posts = computed(() => store.state.posts)
-    const currentIndex = computed(() => store.state.current)
 
-    function handleClick(){
-        store.commit('increment', {number: 3})
-    }
+    const currentPost = computed(() => {
+        return posts.value.find(
+            (post) => post.id === store.state.current
+        )
+    })
 
     onMounted(() => {
         store.dispatch('fetchPosts', 'POST')
@@ -23,9 +24,9 @@
     <button @click="handleClick">+</button>
 
     <section v-if="posts.length > 0">
-        <h2>{{ posts[currentIndex].title }}</h2>
-        <h3>{{ posts[currentIndex].content }}</h3>
-        <button @click="store.dispatch('goToPreviewsPost')">next </button>
+        <h2>{{ currentPost.title }}</h2>
+        <h3>{{ currentPost.content }}</h3>
+        <button @click="store.dispatch('goToPreviewsPost')">previews </button>
         <button @click="store.dispatch('goToNextPost')">next </button>
     </section>
 
