@@ -1,33 +1,26 @@
 <script setup>
     import {onMounted, computed} from 'vue' 
-    import AppHeader from './components/AppHeader.vue'
-    import NavBar from './components/NavBar.vue'
     import {useStore} from 'vuex'
 
     const store = useStore()
-    const posts = computed(() => store.state.posts)
+    const posts = computed(() => store.state.posts.data)
 
-    const currentPost = computed(() => {
-        return posts.value.find(
-            (post) => post.id === store.state.current
-        )
-    })
+    const currentPost = computed(() => store.getters['posts/currentPost'])
+    const somePost = computed(() => store.getters['posts/postById'](2))
 
     onMounted(() => {
-        store.dispatch('fetchPosts', 'POST')
+        store.dispatch('posts/fetchPosts')
     })
 </script>
 
 <template>
-    <AppHeader />
-    <NavBar />
-    <button @click="handleClick">+</button>
 
     <section v-if="posts.length > 0">
         <h2>{{ currentPost.title }}</h2>
         <h3>{{ currentPost.content }}</h3>
-        <button @click="store.dispatch('goToPreviewsPost')">previews </button>
-        <button @click="store.dispatch('goToNextPost')">next </button>
+        <h3>{{ somePost.title }}</h3>
+        <button @click="store.dispatch('posts/goToPreviews')">previews </button>
+        <button @click="store.dispatch('posts/goToNext')">next </button>
     </section>
 
     <section v-else>

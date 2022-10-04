@@ -5,38 +5,57 @@ function testFetch(){
     return new Promise((resolve) => setTimeout(resolve ,2000))
 }
 
-const store = createStore({
+const posts = {
+    namespaced: true,
+
     state(){
         return {
-            current: 1,
-            posts:[]
+            currentId: 1,
+            data:[]
         }
     },
     
     mutations: {
-        setTestPosts(state, postsData){
-            state.posts = postsData
+        setData(state, postsData){
+            state.data = postsData
         },
-        nextPost(state){
-            state.current += 1
-        },
-        previewsPost(state){
-            state.current -= 1
+        goTo(state, direction){
+            if(direction === 'next') state.currentId += 1
+            else if(direction === 'previews') state.currentId -= 1
         }
     },
 
     actions: {  
         async fetchPosts(context){
             testFetch().then(() => {
-                context.commit('setTestPosts', postsData)
+                context.commit('setData', postsData)
             })
         },
-        goToNextPost(context){
-            context.commit('nextPost')
+        goToNext(context){
+            context.commit('goTo', 'next')
         },
-        goToPreviewsPost(context){
-            context.commit('previewsPost')
+        goToPreviews(context){
+            context.commit('goTo', 'previews')
         }
+    },
+
+    getters: {
+        currentPost(state){
+            return state.data.find((post) => post.id === state.currentId)
+        },
+        postById(state){
+            return (
+                function(id){
+                    return state.data.find((post) => post.id === id)
+                }
+            )
+        }        
+    }
+}
+
+const store = createStore({
+    modules:{
+        posts
     }
 })
 
